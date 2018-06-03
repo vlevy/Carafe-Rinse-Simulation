@@ -10,7 +10,7 @@ The simulation records timing for each run and determines which steps lead to th
 
 ## Getting Started
 
-Copy the files to a folder on your hard drive and run pour.py.
+Copy the files to a folder on your hard drive and run 'python carafe_rinse_simulation.py'.
 
 ### Prerequisites
 
@@ -19,10 +19,10 @@ python 3.6
 ### Installing
 
 1. Copy the files to a folder on your hard drive
-2. Edit pour.py and set program parameters to drive the simulation
+2. Edit carafe_rinse_simulation.py and set program parameters to drive the simulation
 3. Edit carafe.py and set the carafe parameters to match your carafe and sink
 
-Run 'python pour.py'
+Run 'python carafe_rinse_simulation.py'
 ```
 Simulation 100,000 (20.00%) of 500,000 done in 0:00:05.087291
 Fastest run took 4 cycles in 25.182078348680 seconds: CleaningRun(run_num=95130, cycle_list=[CleaningCycle(initial_fill=168.31206062687377, extra_drip=False), CleaningCycle(initial_fill=296.0652701149384, extra_drip=False), CleaningCycle(initial_fill=109.31703033663531, extra_drip=False), CleaningCycle(initial_fill=194.7012352594819, extra_drip=False)], carafe=<Carafe.Carafe object at 0x000000001B00CC88>)
