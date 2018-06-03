@@ -105,6 +105,10 @@ run 'python Carafe_tests.py'
 
 Copy Carafe.py and pour.py to the same directory.
 
+## Coding style
+
+* [PEP-8](https://www.python.org/dev/peps/pep-0008/) as enforced by PyCharm
+
 ## Built With
 
 * [PyCharm Community Edition Version 2.7.34 ](https://www.jetbrains.com/pycharm/)
