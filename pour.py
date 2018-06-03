@@ -54,7 +54,7 @@ def clean_up_runs(runs):
     :return: The cleaned-up list of runs
     """
     # Keep only the shortest and longest runs
-    sorted_runs = sorted(runs, key=lambda r:  r.carafe.seconds_elapsed)
+    sorted_runs = sorted(runs, key=lambda r: r.carafe.seconds_elapsed)
     if len(sorted_runs) <= 2 * RUNS_ON_EACH_END_TO_KEEP:
         # List of runs is already short enough
         return sorted_runs
