@@ -18,19 +18,29 @@ REALTIME_PLAYBACK = True
 RANDOM_SEED = time()
 
 def perform_carafe_cleaning(initial_volume, final_concentration):
-    """Perform one carafe cleaning, starting with an amount of pure coffee and finishing when the final
+    """Perform one carafe cleaning (run), starting with an amount of pure coffee and finishing when the final
     concentration is sufficiently low.
     :param initial_volume: Initial volume of pure coffee
     :param final_concentration: Required maximum final concentration to be considered clean
     :return: A tuple of the carafe object and the list of cleaning cycles for the entire cleaning run
     """
+
+    # Initialize a list of cycles and a carafe with dregs of pure coffee
     cycle_list = list()
     carafe = Carafe(initial_volume)
+
+    # Keep rinsing out the carafe until it is clean, i.e., until the concentration of coffee is sufficiently low
     while carafe.concentration > final_concentration:
+        # Add a random amount of water, from infinitesimal to the capacity of the carafe
         initial_fill = random.random() * CARAFE_CAPACITY
-        extra_drip = random.random() < 0.5
         carafe.fill(initial_fill)
+
+        # Pour out the mixture. Coin toss whether to wait the extra seconds for the pour to become a slow drip
+        # at one drop per second
+        extra_drip = random.random() < 0.5
         carafe.pour_out(extra_drip)
+
+        # Record this rinse cycle
         cycle = CleaningCycle(initial_fill, extra_drip)
         cycle_list.append(cycle)
 

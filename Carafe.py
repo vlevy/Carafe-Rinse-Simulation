@@ -1,7 +1,9 @@
 from time import sleep
 from collections import namedtuple
+
 CleaningEvent = namedtuple('CleaningEvent',   'seconds  comment')
 
+# Constants
 SECONDS_TO_TIP = 0.5           # Before pouring can occur, need to tip carafe over
 SECONDS_TO_SHAKE = 2.0         # Number of seconds of shaking to mix contents after adding water
 SECONDS_TO_DRIP_FAST = 0.6     # Transition time from full pour to fast drip
@@ -14,6 +16,8 @@ DREGS_ML_EXTRA = 2.0           # Leftover volume in carafe after waiting for dro
 
 
 class Carafe(object):
+    """Class to encapulate a coffee carafe as used to fill and pour out during rinsing.
+    """
     def __init__(self, contents_ml):
         """Constructor for the Carafe object
         :param contents_ml: Initial volume of pure coffee
