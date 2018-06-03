@@ -5,15 +5,15 @@ from datetime import datetime
 from collections import namedtuple
 
 CleaningCycle = namedtuple('CleaningCycle', 'initial_fill  extra_drip')
-CleaningRun = namedtuple('CleaningRun',   'run_num  carafe  cycle_list')
+CleaningRun = namedtuple('CleaningRun', 'run_num  cycle_list  carafe')
 
 # Program parameters
 CARAFE_CAPACITY = 2000  # Milliliters
-NUMBER_OF_RUNS = 400000000
-RUNS_PER_DATA_CLEANUP = 1000000
+NUMBER_OF_RUNS = 500000
+RUNS_PER_DATA_CLEANUP = 100000
 INITIAL_COFFEE_VOLUME = 5.0
 MAXIMUM_ALLOWED_CONCENTRATION = 1.0e-6
-RUNS_ON_EACH_END_TO_KEEP = 100
+RUNS_ON_EACH_END_TO_KEEP = 10
 REALTIME_PLAYBACK = True
 RANDOM_SEED = time()
 
@@ -30,7 +30,10 @@ def perform_carafe_cleaning(initial_volume, final_concentration):
     carafe = Carafe(initial_volume)
 
     # Keep rinsing out the carafe until it is clean, i.e., until the concentration of coffee is sufficiently low
+    cycle_num = 0
     while carafe.concentration > final_concentration:
+        cycle_num += 1
+        carafe.add_time(None, f'Cycle {cycle_num}')
         # Add a random amount of water, from infinitesimal to the capacity of the carafe
         initial_fill = random.random() * CARAFE_CAPACITY
         carafe.fill(initial_fill)
@@ -72,7 +75,7 @@ def perform_runs():
     start_time = datetime.now()
     for run_num in range(NUMBER_OF_RUNS):
         carafe, cycle_list = perform_carafe_cleaning(INITIAL_COFFEE_VOLUME, MAXIMUM_ALLOWED_CONCENTRATION)
-        runs.append(CleaningRun(run_num, carafe, cycle_list))
+        runs.append(CleaningRun(run_num, cycle_list, carafe))
         if not ((run_num + 1) % RUNS_PER_DATA_CLEANUP):
             # Time to clean up the list of runs, in order to maintain a manageble memory footprint
             runs = clean_up_runs(runs)
@@ -80,17 +83,17 @@ def perform_runs():
             # Print a summary
             num_runs_completed = run_num + 1
             elapsed_run_time = datetime.now() - start_time
-            print(f'Simulation {num_runs_completed} ({100.0 * (num_runs_completed) / NUMBER_OF_RUNS}%) of '
-                  f'{NUMBER_OF_RUNS} done in {elapsed_run_time}')
+            print(f'Simulation {num_runs_completed:,} ({100.0 * (num_runs_completed) / NUMBER_OF_RUNS:.2f}%) of '
+                  f'{NUMBER_OF_RUNS:,} done in {elapsed_run_time}')
             run = runs[0]
-            print(f'Fastest run took {len(run.cycle_list)} cycles in {run.carafe.seconds_elapsed} seconds: {run}')
+            print(f'Fastest run took {len(run.cycle_list):,} cycles in {run.carafe.seconds_elapsed:.12f} seconds: {run}')
             run = runs[-1]
-            print(f'Slowest run took {len(run.cycle_list)} cycles in {run.carafe.seconds_elapsed} seconds: {run}')
+            print(f'Slowest run took {len(run.cycle_list)} cycles in {run.carafe.seconds_elapsed:.12f} seconds: {run}')
             runs_remaining = NUMBER_OF_RUNS - num_runs_completed
             time_per_run = elapsed_run_time / num_runs_completed
             time_remaining = runs_remaining * time_per_run
             eta = datetime.now() + time_remaining
-            print(f'{runs_remaining} remaining, estimated remaining time {time_remaining}, estimated completion {eta}')
+            print(f'{runs_remaining:,} remaining, estimated remaining time {time_remaining}, estimated completion {eta}')
 
     runs = clean_up_runs(runs)
     return runs
@@ -102,18 +105,18 @@ def display_runs(runs):
     :return: None
     """
     runs.sort(key=lambda r: r.carafe.seconds_elapsed)
-    for run_num in range(100):
+    for run_num in range(RUNS_ON_EACH_END_TO_KEEP):
         run = runs[run_num]
-        print(f'{run_num + 1} Fastest run took {len(run.cycle_list)} '
-              f'cycles in {run.carafe.seconds_elapsed} seconds: {run.cycle_list}')
+        print(f'{run_num + 1:,} Fastest run took {len(run.cycle_list)} '
+              f'cycles in {run.carafe.seconds_elapsed:.12f} seconds: {run.cycle_list}')
     fastest_run = runs[0]
 
     print('')
     runs.sort(key=lambda r: r.carafe.seconds_elapsed, reverse=True)
-    for run_num in range(100):
+    for run_num in range(RUNS_ON_EACH_END_TO_KEEP):
         run = runs[run_num]
-        print(f'{run_num + 1} Slowest run took {len(run.cycle_list)} '
-              f'cycles in {run.carafe.seconds_elapsed} seconds: {run.cycle_list}')
+        print(f'{run_num + 1:,} Slowest run took {len(run.cycle_list)} '
+              f'cycles in {run.carafe.seconds_elapsed:.12f} seconds: {run.cycle_list}')
 
     print('\nPlaying back fastest run')
     fastest_run.carafe.play_back_events(REALTIME_PLAYBACK)
