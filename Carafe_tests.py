@@ -26,13 +26,13 @@ class Carafe_test(unittest.TestCase):
         self.assertEqual(len(carafe.events), 1)
         self.assertAlmostEqual(carafe.seconds_elapsed, 1.0, places=9)
         self.assertAlmostEqual(event.seconds, 1.0, places=9)
-        self.assertEqual(event.comment, 'Adding 1 second for 1.0 seconds')
+        self.assertEqual(event.comment, 'Adding 1 second for 1.00 seconds')
 
         event = carafe.add_time(2.0, 'Adding 2 seconds')
         self.assertEqual(len(carafe.events), 2)
         self.assertAlmostEqual(carafe.seconds_elapsed, 3.0, places=9)
         self.assertAlmostEqual(event.seconds, 2.0, places=9)
-        self.assertEqual(event.comment, 'Adding 2 seconds for 2.0 seconds')
+        self.assertEqual(event.comment, 'Adding 2 seconds for 2.00 seconds')
 
     def test_fill(self):
         """Test the Carafe fill method
